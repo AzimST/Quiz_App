@@ -97,7 +97,7 @@ class Quiz:
 
     def disp_title(self):
 
-        title = Label(mainS,text="INGILIZCE KELIME OYUNU",width=50,bg="green",
+        title = Label(mainS,text="English Word Game",width=50,bg="green",
                       fg="white",font="ariel 20 bold")
         title.place(x=0,y=2)
 
@@ -153,7 +153,7 @@ class Quiz:
     def wordAddButton(self):
         addPage = Tk()
 
-        addPage.title("kelime ekleme")
+        addPage.title("Add word")
         addPage.geometry("250x200")
         infoLabel = Label(addPage,text="Kelime girin",font="Times 20",width=17,bg="red")
 
@@ -199,7 +199,7 @@ class Quiz:
 
 mainS= Tk()
 
-mainS.title("İngilizce en cok kullanılan 100 kelime")
+mainS.title("Quiz App")
 mainS.geometry("750x400")
 
 
