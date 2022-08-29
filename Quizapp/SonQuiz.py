@@ -16,6 +16,13 @@ class Quiz:
         # CONNECT TO DATABASE
         self.wordDatabase = dictionary.Dictionary()
 
+        # MAX QUESTİON
+        self.total_size = 25
+        # QUESTİON COUNTER
+        self.qno=0
+        # CORRECT COUNTER
+        self.correct = 0
+        self.wrong = 0
 
         # CREATE WİDGETS
         self.disp_title()
@@ -23,19 +30,22 @@ class Quiz:
         self.buttons()
         self.opts = self.radio_buttons()
 
-        # MAX QUESTİON
-        # self.total_size = 25
-        # QUESTİON COUNTER
-        self.qno=0
-        # CORRECT COUNTER
-        self.correct = 0
-        self.wrong = 0
-        self.answer = Label(mainS, text="", font="Times 20")
+        self.previousWordLabel = Label(mainS,font="Times 20")
+        self.answer = Label(mainS, font="Times 20")
         self.answer.place(x=275, y=110)
+        self.previousWordLabel.place(x=275,y=150)
+
+    def selectPreviousWord(self):
+        if (self.qno > 0):
+            self.previousWord = self.word
 
     def display_question(self):
+        # Previous Word Select
+
+
         # NUMBER FOR THE QUESTİONS İNDEX
         self.randomIndex = random.randrange(1, self.wordDatabase.databaseCounter())
+
         # SELECT WORD OF QUESİTON
         self.word = self.wordDatabase.questionFind(index=self.randomIndex)
 
@@ -48,8 +58,10 @@ class Quiz:
         # wrong_count = self.total_size - self.correct
         correct = f"Correct: {self.correct}"
         wrong = f"Wrong: {self.wrong}"
-
-        score = int(self.correct / self.qno *100)
+        if self.qno !=0 :
+            score = int(self.correct / self.qno *100)
+        else:
+            score=0
         result = f"Score: {score}%"
         mb.showinfo("Result", f"{result}\n{correct}\n{wrong}")
 
@@ -59,6 +71,7 @@ class Quiz:
         flag = False
         if (choice == self.word.index):
             flag = True
+        print(choice,self.word.index)
         return flag
 
     # BUTTON FOR THE NEXT QUESTİON
@@ -70,6 +83,7 @@ class Quiz:
         self.qno += 1
 
         self.clear()
+        self.selectPreviousWord()
         self.display_isCorrect()
         self.display_question()
         self.radio_buttons()
@@ -83,7 +97,7 @@ class Quiz:
         quit_button = Button(mainS,text="quit",command=mainS.destroy,
                              width=8,bg="black",fg="white",font="ariel 16 ")
 
-        add_button = Button(mainS, text="Add Word", command=self.wordAddButton, width=8, bg="red", fg="white", font="ariel 16")
+        add_button = Button(mainS, text="Add Word", command=self.wordAddDisplay, width=8, bg="red", fg="white", font="ariel 16")
 
         Rslt_but = Button(mainS, text="Display Result", command=self.display_result, width=12, bg="red", fg="white", font="ariel 16")
 
@@ -97,7 +111,7 @@ class Quiz:
 
     def disp_title(self):
 
-        title = Label(mainS,text="English Word Game",width=50,bg="green",
+        title = Label(mainS,text="English Word Game",width=45,bg="green",
                       fg="white",font="ariel 20 bold")
         title.place(x=0,y=2)
 
@@ -149,13 +163,14 @@ class Quiz:
         self.rdButton3.place_forget()
         self.question.place_forget()
         self.answer.place_forget()
+        self.previousWordLabel.place_forget()
 
-    def wordAddButton(self):
+    def wordAddDisplay(self):
         addPage = Tk()
 
-        addPage.title("Add word")
+        addPage.title("Add Word")
         addPage.geometry("250x200")
-        infoLabel = Label(addPage,text="Kelime girin",font="Times 20",width=17,bg="red")
+        infoLabel = Label(addPage,text="Enter Word",font="Times 20",width=17,bg="red")
 
         englishLabel = Label(addPage,text="English",font="Times 12", width=5)
         turkıshLabel = Label(addPage, text="Turkish", font="Times 12", width=5)
@@ -176,7 +191,7 @@ class Quiz:
 
         addPage.mainloop
 
-
+    # WORD ADD BACKEND
     def wordAddFunction(self):
         english = self.wordEntryEnglish.get()
         turkish = self.wordEntryTurkısh.get()
@@ -184,18 +199,22 @@ class Quiz:
         newWord=dictionary.Word(english=english,turkish=turkish,index=self.wordDatabase.databaseCounter()+1)
         self.wordDatabase.add_words(newWord)
 
-
+    #DİSPLAY PREVİOUS WORD AND RESULT
     def display_isCorrect(self):
         if self.check_Answer():
             answer = "CORRECT"
+            bg = "green"
+
         else:
             answer = "WRONG"
+            bg = "red"
 
-        self.answer = Label(mainS, text=answer, font="Times 15")
+        previousWord = self.previousWord
+
+        self.answer = Label(mainS, text=answer, font="Times 15",bg=bg)
+        self.previousWordLabel = Label(mainS,text=f"{previousWord.english}---    {previousWord.turkish}",bg=bg,font="Times 15")
+        self.previousWordLabel.place(x=275,y=150)
         self.answer.place(x=275, y=110)
-
-
-
 
 mainS= Tk()
 
